@@ -42,11 +42,23 @@ public class ProductServiceImplement implements ProductService {
 
     @Override
     public Mono<Product> updatedProduct(UpdateProduct updateProduct) {
-        return null;
+        return reactiveRepositoryProduct.findById(updateProduct.getId())
+                .flatMap(currentData -> {
+                    currentData.setId(updateProduct.getId());
+                    currentData.setName(updateProduct.getName());
+                    currentData.setQuantity(updateProduct.getQuantity());
+                    currentData.setPrice(updateProduct.getPrice());
+                    currentData.setDescription(updateProduct.getDescription());
+                    currentData.setBrand(updateProduct.getBrand());
+                    return reactiveRepositoryProduct.save(currentData);
+                });
     }
 
     @Override
     public Mono<Void> deleteProduct(String id) {
-        return null;
+        return reactiveRepositoryProduct.findById(id)
+                .flatMap(destroyProduct -> {
+                    return reactiveRepositoryProduct.delete(destroyProduct);
+                });
     }
 }

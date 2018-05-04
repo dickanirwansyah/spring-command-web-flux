@@ -2,6 +2,7 @@ package com.flux.app.springfluxcart.controller;
 
 import com.flux.app.springfluxcart.entity.Product;
 import com.flux.app.springfluxcart.model.InsertProduct;
+import com.flux.app.springfluxcart.model.UpdateProduct;
 import com.flux.app.springfluxcart.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -29,5 +30,19 @@ public class ControllerProduct {
         return productService.createdProduct(insertProduct)
                 .map(callbackJSON -> new ResponseEntity<Product>(callbackJSON, HttpStatus.CREATED))
                 .defaultIfEmpty(ResponseEntity.badRequest().build());
+    }
+
+    @PostMapping(value = "/updated")
+    public Mono<ResponseEntity<Product>> updatedProduct(@RequestBody @Valid UpdateProduct updateProduct){
+        return productService.updatedProduct(updateProduct)
+                .map(callbackJSON -> new ResponseEntity<Product>(callbackJSON, HttpStatus.OK))
+                .defaultIfEmpty(ResponseEntity.notFound().build());
+    }
+
+    @PostMapping(value = "/deleted/{id}")
+    public Mono<ResponseEntity<Void>> deletedProduct(@PathVariable String id){
+        return productService.deleteProduct(id)
+                .map(callbackJSON -> new ResponseEntity<Void>(callbackJSON, HttpStatus.OK))
+                .defaultIfEmpty(ResponseEntity.ok().build());
     }
 }
