@@ -23,7 +23,21 @@ public class ProductServiceImplement implements ProductService {
 
     @Override
     public Mono<Product> createdProduct(InsertProduct insertProduct) {
-        return null;
+        String id = insertProduct.getId();
+        boolean valid = false;
+        Product product = null;
+
+        if(id == null){
+            product = new Product();
+            valid = true;
+        }
+
+        product.setName(insertProduct.getName());
+        product.setDescription(insertProduct.getDescription());
+        product.setQuantity(insertProduct.getQuantity());
+        product.setPrice(insertProduct.getPrice());
+        product.setBrand(insertProduct.getBrand());
+        return reactiveRepositoryProduct.save(product);
     }
 
     @Override
